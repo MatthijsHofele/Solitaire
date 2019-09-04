@@ -8,6 +8,9 @@ import nl.quintor.solitaire.models.card.Suit;
 import nl.quintor.solitaire.models.deck.Deck;
 import nl.quintor.solitaire.models.deck.DeckType;
 
+import static nl.quintor.solitaire.models.card.Rank.ACE;
+import static nl.quintor.solitaire.models.deck.DeckType.*;
+
 /**
  * Library class for card move legality checks. The class is not instantiable, all constructors are private and all methods are
  * static. The class contains several private helper methods. All methods throw {@link MoveException}s, which can
@@ -45,7 +48,11 @@ public class CardMoveChecks {
      * @throws MoveException on illegal move
      */
     public static void deckLevelChecks(Deck sourceDeck, int sourceCardIndex, Deck destinationDeck) throws MoveException {
-        // TODO: Write implementation
+        if (sourceDeck == destinationDeck) throw new MoveException("Move source and destination can't be the same");
+        if (sourceDeck.size() == 0) throw new MoveException("You can't move a card from an empty deck");
+        if (destinationDeck.getDeckType() == STOCK) throw new MoveException("You can't move cards to the stock");
+        if (sourceDeck.getInvisibleCards() > 0 && sourceCardIndex < (sourceDeck.size() - sourceDeck.getInvisibleCards())) throw new MoveException("You can't move an invisible card");
+        if (sourceDeck.size() - sourceCardIndex > 1 && destinationDeck.getDeckType() == STACK) throw new MoveException("You can't move more than 1 card at a time to a Stack Pile");
     }
 
     /**
@@ -60,6 +67,17 @@ public class CardMoveChecks {
      */
     public static void cardLevelChecks(Deck targetDeck, Card cardToAdd) throws MoveException {
         // TODO: Write implementation
+
+
+        if (targetDeck.getDeckType() == STOCK || targetDeck.getDeckType() == WASTE) throw new MoveException("Target deck is neither Stack nor Column.");
+        if (targetDeck.isEmpty() == true && cardToAdd.getRank() != ACE) throw new MoveException("An Ace has to be the first card of a Stack Pile");
+
+        if (!targetDeck.isEmpty()) {
+            Card lastCard = targetDeck.get(targetDeck.size() - 1);
+          if (cardToAdd.getOrdinal() - lastCard.getOrdinal()  != 1 ) throw new MoveException("Stack Piles hold same-suit cards of increasing Rank from Ace to King");
+          if (cardToAdd.getSuit() != lastCard.getSuit()) throw new MoveException("Stack Piles can only contain same-suit cards");
+        }
+
     }
 
     // Helper methods
@@ -95,8 +113,7 @@ public class CardMoveChecks {
      */
     static boolean opposingColor(Card card1, Card card2){
         // TODO: Write implementation
-
-        return true;
+        return redSuit(card1) != redSuit(card2);
     }
 
     /**
