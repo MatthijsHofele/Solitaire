@@ -25,6 +25,7 @@ public class GameStateController {
      */
     public static GameState init(){
         // TODO: Write implementation
+
         return new GameState();
     }
 

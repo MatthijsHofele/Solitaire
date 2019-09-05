@@ -9,6 +9,7 @@ package nl.quintor.solitaire.models.card;
  * that is non-Windows terminals, this can be a Unicode symbol. In Windows 10 in 2018, it cannot.
  */
 public enum Rank{
+    ACE ("A", "A"),
     TWO ("2", "2"),
     THREE ("3", "3"),
     FOUR("4", "4"),
@@ -21,7 +22,6 @@ public enum Rank{
     JACK ("J", "J"),
     QUEEN ("Q", "Q"),
     KING ("K", "K"),
-    ACE ("A", "A"),
     JOKER_BLACK("\u2606", "JB"),
     JOKER_RED("\u2605", "JR");
 
